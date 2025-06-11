@@ -15,8 +15,17 @@
 					item-title="year"
 					item-value="year"/>
 			</v-col>
+			<v-col cols="12" sm="6" md="4">
+				<v-select
+					v-model="sortOrder"
+					:items="sortOptions"
+					label="Sort by Launch Date"
+					item-title="label"
+					item-value="value"
+				/>
+			</v-col>
 		</v-row>
-		<v-table v-if="filteredLaunches.length">
+		<v-table v-if="sortedLaunches.length">
 			<thead>
 				<tr>
 					<th class="text-left">Mission Name</th>
@@ -27,7 +36,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="launch in filteredLaunches" :key="launch.id">
+				<tr v-for="launch in sortedLaunches" :key="launch.id">
 					<td>{{ launch.mission_name }}</td>
 					<td>{{ formatDate(launch.launch_date_utc) }}</td>
 					<td>{{ launch.launch_site?.site_name_long || 'N/A' }}</td>
@@ -42,6 +51,7 @@
 
 <script lang="ts" setup>
 import { useLaunchYearFilter } from '~/composables/useLaunchYearFilter'
+import { useLaunchSort } from '~/composables/useLaunchSort'
 
 const LAUNCHES_QUERY = gql`
 	query GetLaunches {
@@ -69,6 +79,13 @@ const {
 	filteredLaunches,
 	availableYears
 } = useLaunchYearFilter(launches)
+
+const sortOptions = [
+	{ label: 'Newest First', value: 'desc' },
+	{ label: 'Oldest First', value: 'asc' }
+]
+
+const { sortOrder, setSortOrder, sortedLaunches } = useLaunchSort(filteredLaunches)
 
 function formatDate(dateStr: string): string {
 	const date = new Date(dateStr)
