@@ -4,7 +4,19 @@
 			<v-icon icon="mdi-rocket-launch" class="mr-2" />
 			SpaceX Launches
 		</h2>
-		<v-table v-if="launches.length">
+		<v-row class="mb-4">
+			<v-col cols="12" sm="6" md="4">
+				<v-select
+					v-model="selectedYear"
+					:items="availableYears"
+					label="Filter by Year"
+					clearable
+					clear-icon="mdi-close-circle"
+					item-title="year"
+					item-value="year"/>
+			</v-col>
+		</v-row>
+		<v-table v-if="filteredLaunches.length">
 			<thead>
 				<tr>
 					<th class="text-left">Mission Name</th>
@@ -15,7 +27,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="launch in launches" :key="launch.id">
+				<tr v-for="launch in filteredLaunches" :key="launch.id">
 					<td>{{ launch.mission_name }}</td>
 					<td>{{ formatDate(launch.launch_date_utc) }}</td>
 					<td>{{ launch.launch_site?.site_name_long || 'N/A' }}</td>
@@ -29,6 +41,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useLaunchYearFilter } from '~/composables/useLaunchYearFilter'
+
 const LAUNCHES_QUERY = gql`
 	query GetLaunches {
 		launchesPast(limit: 50, sort: "launch_date_utc", order: "desc") {
@@ -47,8 +61,14 @@ const LAUNCHES_QUERY = gql`
 `
 
 const { data, pending, error } = useAsyncQuery<{ launchesPast: any[] }>(LAUNCHES_QUERY)
-
 const launches = computed(() => data.value?.launchesPast ?? [])
+
+const {
+	selectedYear,
+	setYear,
+	filteredLaunches,
+	availableYears
+} = useLaunchYearFilter(launches)
 
 function formatDate(dateStr: string): string {
 	const date = new Date(dateStr)
