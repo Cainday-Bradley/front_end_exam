@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h2 class="mb-6">
-      <v-icon icon="mdi-rocket" class="mr-2" />
+      <v-icon icon="mdi-rocket" color="#246fc3" class="mr-2" />
       SpaceX Rockets
     </h2>
     <v-row>

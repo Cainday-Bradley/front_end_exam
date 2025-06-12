@@ -4,7 +4,7 @@
       <v-col cols="12">
         <div class="d-flex align-center justify-space-between mb-6">
           <h1 class="text-h4 d-flex align-center">
-            <v-icon icon="mdi-heart" color="error" size="large" class="mr-2" />
+            <v-icon icon="mdi-heart" color="#246fc3" size="large" class="mr-2" />
             Favorite Rockets
           </h1>
           <v-btn
