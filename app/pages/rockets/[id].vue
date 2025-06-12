@@ -63,8 +63,8 @@
 					@click="toggleFavorite"
 					:icon="isFavorite ? 'mdi-heart' : 'mdi-heart-outline'"
 					variant="text"
-				>
-					{{ isFavorite ? 'Remove from Favorites' : 'Add to Favorites' }}
+					class="text-none">
+					{{ isFavorite ? 'Remove' : 'Add' }}
 				</v-btn>
 			</v-card-actions>
 		</v-card>

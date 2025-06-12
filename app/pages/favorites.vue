@@ -31,7 +31,8 @@
               color="primary"
               variant="text"
               :to="`/rockets/${rocket.id}`"
-            >
+              size="small"
+              class="text-none">
               View Details
             </v-btn>
             <v-btn
@@ -39,9 +40,8 @@
               variant="text"
               icon="mdi-heart-off"
               @click="removeFavorite(rocket.id)"
-            >
-              Remove
-            </v-btn>
+              size="small"
+            />
           </v-card-actions>
         </v-card>
       </v-col>
