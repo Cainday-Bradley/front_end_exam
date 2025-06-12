@@ -1,45 +1,135 @@
 import type { PiniaPluginContext } from 'pinia'
 
-const DB_NAME = 'spacex-explorer-db'
-const DB_VERSION = 1
-const STORE_NAME = 'pinia-state'
+let db: IDBDatabase | null = null
 
-export function piniaPersistencePlugin({ store }: PiniaPluginContext) {
-  // Initialize IndexedDB
-  const request = indexedDB.open(DB_NAME, DB_VERSION)
-
-  request.onerror = (event) => {
-    console.error('IndexedDB error:', event)
-  }
-
-  request.onupgradeneeded = (event) => {
-    const db = (event.target as IDBOpenDBRequest).result
-    if (!db.objectStoreNames.contains(STORE_NAME)) {
-      db.createObjectStore(STORE_NAME)
+const initDB = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (db) {
+      resolve()
+      return
     }
-  }
 
-  // Load state from IndexedDB
-  request.onsuccess = (event) => {
-    const db = (event.target as IDBOpenDBRequest).result
-    const transaction = db.transaction(STORE_NAME, 'readonly')
-    const objectStore = transaction.objectStore(STORE_NAME)
-    const getRequest = objectStore.get(store.$id)
+    const request = indexedDB.open('spacex-explorer', 1)
 
-    getRequest.onsuccess = () => {
-      if (getRequest.result) {
-        store.$patch(getRequest.result)
+    request.onerror = () => {
+      console.error('Failed to open IndexedDB')
+      reject(new Error('Failed to open IndexedDB'))
+    }
+
+    request.onsuccess = (event) => {
+      db = (event.target as IDBOpenDBRequest).result
+      resolve()
+    }
+
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result
+      if (!db.objectStoreNames.contains('favorites')) {
+        db.createObjectStore('favorites')
       }
     }
+  })
+}
+
+const loadState = async (storeId: string): Promise<any> => {
+  if (!db) {
+    await initDB()
   }
 
-  // Subscribe to store changes
-  store.$subscribe((mutation, state) => {
-    const db = request.result
-    if (db) {
-      const transaction = db.transaction(STORE_NAME, 'readwrite')
-      const objectStore = transaction.objectStore(STORE_NAME)
-      objectStore.put(state, store.$id)
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database not initialized'))
+      return
+    }
+
+    const transaction = db.transaction(['favorites'], 'readonly')
+    const store = transaction.objectStore('favorites')
+    const request = store.get(storeId)
+
+    request.onerror = () => {
+      console.error('Failed to load state from IndexedDB')
+      reject(new Error('Failed to load state from IndexedDB'))
+    }
+
+    request.onsuccess = () => {
+      resolve(request.result || { favorites: [] })
     }
   })
-} 
+}
+
+const saveState = async (storeId: string, state: any): Promise<void> => {
+  if (!db) {
+    await initDB()
+  }
+
+  return new Promise((resolve, reject) => {
+    if (!db) {
+      reject(new Error('Database not initialized'))
+      return
+    }
+
+    // Extract and serialize only the necessary data from favorites
+    const serializableState = {
+      favorites: (state.favorites || []).map((rocket: any) => ({
+        id: rocket.id,
+        name: rocket.name,
+        description: rocket.description,
+        flickr_images: rocket.flickr_images,
+        wikipedia: rocket.wikipedia
+      }))
+    }
+
+    const transaction = db.transaction(['favorites'], 'readwrite')
+    const store = transaction.objectStore('favorites')
+    const request = store.put(serializableState, storeId)
+
+    request.onerror = () => {
+      console.error('Failed to save state to IndexedDB')
+      reject(new Error('Failed to save state to IndexedDB'))
+    }
+
+    request.onsuccess = () => {
+      resolve()
+    }
+  })
+}
+
+const piniaPersistencePlugin = ({ store }: PiniaPluginContext) => {
+  // Skip if we're on the server
+  if (process.server) return
+
+  // Skip if store is not initialized
+  if (!store || !store.$id) return
+
+  // Only handle favorites store
+  if (store.$id !== 'favorites') return
+
+  // Initialize database and load state
+  initDB()
+    .then(async () => {
+      try {
+        const savedState = await loadState(store.$id)
+        if (savedState) {
+          store.$patch(savedState)
+        }
+      } catch (error) {
+        console.error('Failed to load state:', error)
+      }
+    })
+    .catch((error) => {
+      console.error('Failed to initialize IndexedDB:', error)
+    })
+
+  // Subscribe to store changes
+  store.$subscribe(
+    async (mutation, state) => {
+      try {
+        await saveState(store.$id, state)
+      } catch (error) {
+        console.error('Failed to save state:', error)
+      }
+    },
+    { detached: true }
+  )
+}
+
+export default piniaPersistencePlugin 
