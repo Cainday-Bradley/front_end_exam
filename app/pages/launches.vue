@@ -40,7 +40,16 @@
 					<td>{{ launch.mission_name }}</td>
 					<td>{{ formatDate(launch.launch_date_utc) }}</td>
 					<td>{{ launch.launch_site?.site_name_long || 'N/A' }}</td>
-					<td>{{ launch.rocket?.rocket_name || 'N/A' }}</td>
+					<td>
+						<NuxtLink
+							v-if="launch.rocket && launch.rocket.rocket_name && launch.rocket.rocket.id"
+							:to="`/rockets/${launch.rocket.rocket.id}`"
+							class="text-primary text-decoration-underline"
+							style="cursor:pointer">
+							{{ launch.rocket.rocket_name }}
+						</NuxtLink>
+						<span v-else>{{ launch.rocket?.rocket_name || 'N/A' }}</span>
+					</td>
 					<td>{{ launch.details || 'No details available.' }}</td>
 				</tr>
 			</tbody>
@@ -64,6 +73,9 @@ const LAUNCHES_QUERY = gql`
 			}
 			rocket {
 				rocket_name
+				rocket {
+					id
+				}
 			}
 			details
 		}
