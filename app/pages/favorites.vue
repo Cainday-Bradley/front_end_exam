@@ -1,0 +1,150 @@
+<template>
+  <v-container class="py-10">
+    <v-row>
+      <v-col cols="12">
+        <h1 class="text-h4 mb-6 d-flex align-center">
+          <v-icon icon="mdi-heart" color="error" class="mr-2" />
+          Favorite Rockets
+        </h1>
+      </v-col>
+    </v-row>
+
+    <v-row v-if="favorites.length > 0">
+      <v-col cols="12" sm="6" md="4" v-for="rocket in favorites" :key="rocket.id">
+        <v-card class="h-100" elevation="4">
+          <v-card-title class="text-h6">
+            {{ rocket.name }}
+          </v-card-title>
+          <v-card-text>
+            <div class="text-body-2 text-grey-darken-1 mb-4">
+              {{ truncateDescription(rocket.description) }}
+            </div>
+            <div class="d-flex align-center">
+              <v-icon icon="mdi-calendar" class="mr-1" size="small" />
+              <span class="text-caption">
+                First Flight: {{ formatDate(rocket.first_flight) }}
+              </span>
+            </div>
+          </v-card-text>
+          <v-card-actions class="justify-space-between">
+            <v-btn
+              color="primary"
+              variant="text"
+              :to="`/rockets/${rocket.id}`"
+            >
+              View Details
+            </v-btn>
+            <v-btn
+              color="error"
+              variant="text"
+              icon="mdi-heart-off"
+              @click="removeFavorite(rocket.id)"
+            >
+              Remove
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-row v-else>
+      <v-col cols="12">
+        <v-alert
+          type="info"
+          variant="tonal"
+          class="text-center"
+        >
+          <v-icon icon="mdi-information" class="mr-2" />
+          No favorite rockets yet. Visit the rockets page to add some!
+        </v-alert>
+      </v-col>
+    </v-row>
+
+    <v-row v-if="favorites.length > 0" class="mt-4">
+      <v-col cols="12" class="text-center">
+        <v-btn
+          color="error"
+          variant="outlined"
+          prepend-icon="mdi-delete"
+          @click="showClearDialog = true"
+        >
+          Clear All Favorites
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <!-- Clear All Confirmation Dialog -->
+    <v-dialog v-model="showClearDialog" max-width="400">
+      <v-card>
+        <v-card-title class="text-h5">
+          Clear All Favorites?
+        </v-card-title>
+        <v-card-text>
+          Are you sure you want to remove all rockets from your favorites? This action cannot be undone.
+        </v-card-text>
+        <v-card-actions class="justify-space-between">
+          <v-btn
+            color="grey-darken-1"
+            variant="text"
+            @click="showClearDialog = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="error"
+            variant="text"
+            @click="clearAllFavorites"
+          >
+            Clear All
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
+</template>
+
+<script lang="ts" setup>
+import { useFavoritesStore } from '~/stores/useFavorites'
+import { ref } from 'vue'
+
+const favoritesStore = useFavoritesStore()
+const showClearDialog = ref(false)
+
+const favorites = computed(() => favoritesStore.favoriteRockets)
+
+function removeFavorite(rocketId: string) {
+  favoritesStore.removeFavorite(rocketId)
+}
+
+function clearAllFavorites() {
+  favoritesStore.clearFavorites()
+  showClearDialog.value = false
+}
+
+function truncateDescription(description: string): string {
+  if (!description) return ''
+  return description.length > 150
+    ? description.substring(0, 150) + '...'
+    : description
+}
+
+function formatDate(dateStr: string): string {
+  if (!dateStr) return 'N/A'
+  const date = new Date(dateStr)
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+</script>
+
+<style scoped>
+.v-card {
+  transition: transform 0.2s;
+}
+
+.v-card:hover {
+  transform: translateY(-4px);
+}
+</style> 
