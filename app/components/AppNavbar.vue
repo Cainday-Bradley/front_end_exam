@@ -41,6 +41,13 @@
 					'text-grey-lighten-1': $route.path !== item.to && themeStore.isDark,
 				}">
 				{{ item.title }}
+				<!-- Add notification badge for favorites -->
+				<v-badge
+					v-if="item.to === '/favorites' && favoriteCount > 0"
+					:content="favoriteCount"
+					color="error"
+					class="ml-1"
+					location="top end"/>
 			</v-btn>
 
 			<!-- Theme toggle button -->
@@ -78,6 +85,14 @@
 				<v-list-item-title :class="{ 'text-white': themeStore.isDark }">
 					{{ item.title }}
 				</v-list-item-title>
+				<!-- Add notification badge for favorites in mobile menu -->
+				<template v-slot:append>
+					<v-badge
+						v-if="item.to === '/favorites' && favoriteCount > 0"
+						:content="favoriteCount"
+						color="error"
+						location="top end"/>
+				</template>
 			</v-list-item>
 
 			<!-- Theme toggle divider -->
