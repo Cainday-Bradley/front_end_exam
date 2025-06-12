@@ -1,5 +1,5 @@
 <template>
-	<v-app>
+	<v-app :theme="themeStore.isDark ? 'dark' : 'light'">
 		<AppNavbar />
 		<v-main>
 			<slot />
@@ -8,10 +8,15 @@
 	</v-app>
 </template>
 
-<script>
-export default {
-	name: 'DefaultLayout',
-}
+<script lang="ts" setup>
+import { onMounted } from 'vue'
+import { useThemeStore } from '~/stores/theme'
+
+const themeStore = useThemeStore()
+
+onMounted(() => {
+	themeStore.initTheme()
+})
 </script>
 
 <style>

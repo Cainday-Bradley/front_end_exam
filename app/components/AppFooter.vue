@@ -1,15 +1,26 @@
 <template>
-  <v-footer color="grey-lighten-4" app class="pa-3">
+  <v-footer :color="themeStore.isDark ? 'grey-darken-4' : 'grey-lighten-4'" app class="pa-3">
     <v-container class="d-flex justify-center align-center">
-      <span class="text-grey-darken-1 mr-2">© {{ new Date().getFullYear() }} SpaceX Explorer</span>
-      <v-divider vertical class="mx-2" />
-      <a href="https://www.spacex.com/" target="_blank" class="text-primary text-decoration-underline">SpaceX</a>
+      <span :class="{ 'text-grey-lighten-1': themeStore.isDark, 'text-grey-darken-1': !themeStore.isDark }" class="mr-2">
+        © {{ new Date().getFullYear() }} SpaceX Explorer
+      </span>
+      <v-divider vertical class="mx-2" :color="themeStore.isDark ? 'grey-darken-2' : 'grey-lighten-2'" />
+      <a 
+        href="https://www.spacex.com/" 
+        target="_blank" 
+        :class="{ 'text-warning': themeStore.isDark, 'text-primary': !themeStore.isDark }" 
+        class="text-decoration-underline"
+      >
+        SpaceX
+      </a>
     </v-container>
   </v-footer>
 </template>
 
-<script setup>
-// No additional logic needed
+<script lang="ts" setup>
+import { useThemeStore } from '~/stores/theme'
+
+const themeStore = useThemeStore()
 </script>
 
 <style scoped>

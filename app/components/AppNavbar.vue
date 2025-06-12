@@ -1,29 +1,43 @@
 <template>
-  <v-app-bar color="white" elevation="1" class="px-4" :style="{ zIndex: 1004 }">
+  <v-app-bar :color="themeStore.isDark ? 'grey-darken-4' : 'white'" elevation="1" class="px-4" :style="{ zIndex: 1004 }">
     <v-app-bar-nav-icon
       icon="mdi-menu"
-      color="#246fc3"
+      :color="themeStore.isDark ? 'warning' : '#246fc3'"
       @click="drawer = !drawer"
     />
 
     <v-toolbar-title class="text-h5 font-weight-bold">
-      <NuxtLink to="/" class="text-decoration-none text-black">
-        <v-icon icon="mdi-rocket" color="#246fc3" class="mr-2" />
+      <NuxtLink to="/" class="text-decoration-none" :class="{ 'text-white': themeStore.isDark, 'text-black': !themeStore.isDark }">
+        <v-icon icon="mdi-rocket" :color="themeStore.isDark ? 'warning' : '#246fc3'" class="mr-2" />
         SpaceX Explorer
       </NuxtLink>
     </v-toolbar-title>
 
     <v-spacer />
 
-    <div class="d-none d-md-flex">
+    <div class="d-none d-md-flex align-center">
       <v-btn
         v-for="item in menuItems"
         :key="item.to"
         :to="item.to"
         variant="text"
         class="text-none mx-2"
-        :class="{ 'text-blue': $route.path === item.to }">
+        :class="{ 
+          'text-blue': $route.path === item.to && !themeStore.isDark,
+          'text-warning': $route.path === item.to && themeStore.isDark,
+          'text-grey-darken-1': $route.path !== item.to && !themeStore.isDark,
+          'text-grey-lighten-1': $route.path !== item.to && themeStore.isDark
+        }">
         {{ item.title }}
+      </v-btn>
+
+      <v-btn
+        icon
+        @click="themeStore.toggleTheme"
+        class="ml-4"
+        :color="themeStore.isDark ? 'warning' : 'grey-darken-1'"
+      >
+        <v-icon :icon="themeStore.isDark ? 'mdi-weather-sunny' : 'mdi-weather-night'" />
       </v-btn>
     </div>
   </v-app-bar>
@@ -34,7 +48,8 @@
     temporary
     :style="{ zIndex: 1004 }"
     @click:outside="drawer = false"
-    :scrim="false">
+    :scrim="false"
+    :color="themeStore.isDark ? 'grey-darken-4' : 'white'">
     <v-list>
       <v-list-item
         v-for="item in menuItems"
@@ -44,9 +59,25 @@
         class="mb-1"
         @click="drawer = false">
         <template v-slot:prepend>
-          <v-icon :icon="item.icon" color="#246fc3" />
+          <v-icon :icon="item.icon" :color="themeStore.isDark ? 'warning' : '#246fc3'" />
         </template>
-        <v-list-item-title>{{ item.title }}</v-list-item-title>
+        <v-list-item-title :class="{ 'text-white': themeStore.isDark }">{{ item.title }}</v-list-item-title>
+      </v-list-item>
+
+      <v-divider class="my-4" :color="themeStore.isDark ? 'grey-darken-2' : 'grey-lighten-2'" />
+
+      <v-list-item
+        @click="themeStore.toggleTheme"
+        class="mb-1">
+        <template v-slot:prepend>
+          <v-icon
+            :icon="themeStore.isDark ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+            :color="themeStore.isDark ? 'warning' : 'grey-darken-1'"
+          />
+        </template>
+        <v-list-item-title :class="{ 'text-white': themeStore.isDark }">
+          {{ themeStore.isDark ? 'Light Mode' : 'Dark Mode' }}
+        </v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -55,7 +86,7 @@
     v-model="drawer"
     class="align-start justify-start"
     :style="{ zIndex: 1003 }"
-    scrim="black"
+    :scrim="themeStore.isDark ? 'black' : 'grey-darken-3'"
     opacity="0.3"
     :persistent="false"
   />
@@ -63,9 +94,11 @@
 
 <script lang="ts" setup>
 import { useFavoritesStore } from '~/stores/useFavorites'
+import { useThemeStore } from '~/stores/theme'
 
 const favoritesStore = useFavoritesStore()
 const favoriteCount = computed(() => favoritesStore.favoriteCount)
+const themeStore = useThemeStore()
 
 const drawer = ref(false)
 
