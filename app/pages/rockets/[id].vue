@@ -53,10 +53,18 @@
 					</v-col>
 				</v-row>
 			</v-card-text>
-			<v-card-actions class="justify-end">
+			<v-card-actions class="justify-space-between">
 				<v-btn color="secondary" @click="goBack">
 					<v-icon icon="mdi-arrow-left" class="mr-1" />
 					Back
+				</v-btn>
+				<v-btn
+					:color="isFavorite ? 'error' : 'primary'"
+					@click="toggleFavorite"
+					:icon="isFavorite ? 'mdi-heart' : 'mdi-heart-outline'"
+					variant="text"
+				>
+					{{ isFavorite ? 'Remove from Favorites' : 'Add to Favorites' }}
 				</v-btn>
 			</v-card-actions>
 		</v-card>
@@ -70,10 +78,12 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
+import { useFavoritesStore } from '~/stores/useFavorites'
 
 const route = useRoute()
 const router = useRouter()
 const rocketId = route.params.id
+const favoritesStore = useFavoritesStore()
 
 const ROCKET_QUERY = gql`
 	query GetRocket($id: ID!) {
@@ -99,6 +109,18 @@ const ROCKET_QUERY = gql`
 
 const { data, pending, error } = useAsyncQuery<{ rocket: any }>(ROCKET_QUERY, { id: rocketId })
 const rocket = computed(() => data.value?.rocket)
+
+const isFavorite = computed(() => favoritesStore.hasFavorite(rocket.value?.id))
+
+function toggleFavorite() {
+	if (!rocket.value) return
+	
+	if (isFavorite.value) {
+		favoritesStore.removeFavorite(rocket.value.id)
+	} else {
+		favoritesStore.addFavorite(rocket.value)
+	}
+}
 
 function goBack() {
 	router.back()
