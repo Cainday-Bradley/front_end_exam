@@ -4,46 +4,39 @@ interface Rocket {
   id: string
   name: string
   description: string
-  height: {
-    meters: number
-    feet: number
-  }
-  mass: {
-    kg: number
-    lb: number
-  }
   first_flight: string
-  wikipedia: string
-  active: boolean
-}
-
-interface FavoritesState {
-  favorites: Rocket[]
+  height?: { meters: number }
+  diameter?: { meters: number }
+  mass?: { kg: number }
+  stages: number
 }
 
 export const useFavoritesStore = defineStore('favorites', {
-  state: (): FavoritesState => ({
-    favorites: []
+  state: () => ({
+    favoriteRockets: [] as Rocket[]
   }),
 
   getters: {
-    favoriteCount: (state) => state.favorites.length,
-    isFavorite: (state) => (rocketId: string) => state.favorites.some(rocket => rocket.id === rocketId)
+    hasFavorite: (state) => (rocketId: string) => {
+      return state.favoriteRockets.some(rocket => rocket.id === rocketId)
+    },
+    
+    favoriteCount: (state) => state.favoriteRockets.length
   },
 
   actions: {
     addFavorite(rocket: Rocket) {
-      if (!this.isFavorite(rocket.id)) {
-        this.favorites.push(rocket)
+      if (!this.hasFavorite(rocket.id)) {
+        this.favoriteRockets.push(rocket)
       }
     },
 
     removeFavorite(rocketId: string) {
-      this.favorites = this.favorites.filter(rocket => rocket.id !== rocketId)
+      this.favoriteRockets = this.favoriteRockets.filter(rocket => rocket.id !== rocketId)
     },
 
     clearFavorites() {
-      this.favorites = []
+      this.favoriteRockets = []
     }
   }
 }) 
