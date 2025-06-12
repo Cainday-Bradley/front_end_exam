@@ -72,8 +72,8 @@ import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 
 const route = useRoute()
-const rocketId = route.params.id
 const router = useRouter()
+const rocketId = route.params.id
 
 const ROCKET_QUERY = gql`
 	query GetRocket($id: ID!) {
@@ -100,6 +100,10 @@ const ROCKET_QUERY = gql`
 const { data, pending, error } = useAsyncQuery<{ rocket: any }>(ROCKET_QUERY, { id: rocketId })
 const rocket = computed(() => data.value?.rocket)
 
+function goBack() {
+	router.back()
+}
+
 function formatDate(dateStr: string): string {
 	if (!dateStr) return 'N/A'
 	const date = new Date(dateStr)
@@ -108,10 +112,6 @@ function formatDate(dateStr: string): string {
 		month: 'short',
 		day: 'numeric',
 	})
-}
-
-function goBack() {
-	router.back()
 }
 </script>
 
