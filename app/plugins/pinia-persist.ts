@@ -4,6 +4,11 @@ import type { PiniaPluginContext } from 'pinia'
 
 // Define Nuxt plugin for Pinia state persistence
 export default defineNuxtPlugin(({ $pinia }) => {
+  // Check if we're in browser environment
+  if (process.server) {
+    return // Skip IndexedDB initialization on server
+  }
+
   // Initialize IndexedDB database connection
   const initDB = () => {
     return new Promise<IDBDatabase>((resolve, reject) => {
