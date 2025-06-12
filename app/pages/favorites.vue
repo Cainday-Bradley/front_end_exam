@@ -2,17 +2,29 @@
   <v-container class="py-10">
     <v-row>
       <v-col cols="12">
-        <h1 class="text-h4 mb-6 d-flex align-center">
-          <v-icon icon="mdi-heart" color="error" class="mr-2" />
-          Favorite Rockets
-        </h1>
+        <div class="d-flex align-center justify-space-between mb-6">
+          <h1 class="text-h4 d-flex align-center">
+            <v-icon icon="mdi-heart" color="error" size="large" class="mr-2" />
+            Favorite Rockets
+          </h1>
+          <v-btn
+            v-if="favorites.length > 0"
+            color="error"
+            variant="outlined"
+            prepend-icon="mdi-delete"
+            @click="showClearDialog = true"
+          >
+            Clear All
+          </v-btn>
+        </div>
       </v-col>
     </v-row>
 
     <v-row v-if="favorites.length > 0">
       <v-col cols="12" sm="6" md="4" v-for="rocket in favorites" :key="rocket.id">
         <v-card class="h-100" elevation="4">
-          <v-card-title class="text-h6">
+          <v-card-title class="text-h6 d-flex align-center">
+            <v-icon icon="mdi-rocket" color="primary" class="mr-2" />
             {{ rocket.name }}
           </v-card-title>
           <v-card-text>
@@ -20,13 +32,14 @@
               {{ truncateDescription(rocket.description) }}
             </div>
             <div class="d-flex align-center">
-              <v-icon icon="mdi-calendar" class="mr-1" size="small" />
+              <v-icon icon="mdi-calendar" color="primary" class="mr-1" size="small" />
               <span class="text-caption">
                 First Flight: {{ formatDate(rocket.first_flight) }}
               </span>
             </div>
           </v-card-text>
-          <v-card-actions class="justify-space-between">
+          <v-divider />
+          <v-card-actions class="justify-space-between px-4 py-2">
             <v-btn
               color="primary"
               variant="text"
@@ -52,37 +65,38 @@
         <v-alert
           type="info"
           variant="tonal"
-          class="text-center"
+          class="text-center py-6"
+          border="start"
         >
-          <v-icon icon="mdi-information" class="mr-2" />
-          No favorite rockets yet. Visit the rockets page to add some!
+          <v-icon icon="mdi-information" size="large" class="mr-2" />
+          <div class="text-h6 mb-2">No Favorite Rockets</div>
+          <div class="text-body-1">
+            Visit the rockets page to add some rockets to your favorites!
+          </div>
+          <v-btn
+            to="/rockets"
+            color="primary"
+            variant="text"
+            class="mt-4"
+          >
+            <v-icon icon="mdi-rocket" class="mr-1" />
+            Browse Rockets
+          </v-btn>
         </v-alert>
-      </v-col>
-    </v-row>
-
-    <v-row v-if="favorites.length > 0" class="mt-4">
-      <v-col cols="12" class="text-center">
-        <v-btn
-          color="error"
-          variant="outlined"
-          prepend-icon="mdi-delete"
-          @click="showClearDialog = true"
-        >
-          Clear All Favorites
-        </v-btn>
       </v-col>
     </v-row>
 
     <!-- Clear All Confirmation Dialog -->
     <v-dialog v-model="showClearDialog" max-width="400">
       <v-card>
-        <v-card-title class="text-h5">
+        <v-card-title class="text-h5 d-flex align-center">
+          <v-icon icon="mdi-alert" color="error" class="mr-2" />
           Clear All Favorites?
         </v-card-title>
-        <v-card-text>
+        <v-card-text class="pt-4">
           Are you sure you want to remove all rockets from your favorites? This action cannot be undone.
         </v-card-text>
-        <v-card-actions class="justify-space-between">
+        <v-card-actions class="justify-space-between px-6 py-4">
           <v-btn
             color="grey-darken-1"
             variant="text"
@@ -141,10 +155,27 @@ function formatDate(dateStr: string): string {
 
 <style scoped>
 .v-card {
-  transition: transform 0.2s;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .v-card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.v-btn {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: transform 0.2s;
+}
+
+.v-btn:hover {
+  transform: translateY(-1px);
+}
+
+.v-alert {
+  border-radius: 16px;
 }
 </style> 

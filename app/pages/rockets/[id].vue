@@ -1,60 +1,66 @@
 <template>
 	<v-container class="py-10 d-flex justify-center">
-		<v-card v-if="rocket" class="mx-auto" max-width="600" elevation="10">
-			<v-card-title class="headline text-center">
-				<v-icon icon="mdi-rocket" class="mr-2" />
+		<v-card v-if="rocket" class="mx-auto" max-width="800" elevation="8">
+			<v-card-title class="headline text-center pt-6 pb-2">
+				<v-icon icon="mdi-rocket" size="large" color="primary" class="mr-2" />
 				{{ rocket.name }}
 			</v-card-title>
-			<v-card-subtitle class="text-center mb-2">
+			<v-card-subtitle class="text-center mb-4">
 				First Flight:
 				<strong>{{ formatDate(rocket.first_flight) }}</strong>
 			</v-card-subtitle>
-			<v-card-text>
+			<v-divider class="mx-4" />
+			<v-card-text class="pt-6">
 				<v-row>
 					<v-col cols="12">
-						<div class="mb-4">
-							<strong>Description:</strong>
-							<div class="text-grey-darken-1">{{ rocket.description }}</div>
+						<div class="mb-6">
+							<div class="text-subtitle-1 font-weight-bold mb-2">Description</div>
+							<div class="text-body-1 text-grey-darken-1">{{ rocket.description }}</div>
 						</div>
 					</v-col>
 				</v-row>
 				<v-row>
-					<v-col cols="12" sm="6">
-						<v-list-item>
-							<v-list-item-title>Height</v-list-item-title>
-							<v-list-item-subtitle>
-								{{ rocket.height?.meters || 'N/A' }} m
-							</v-list-item-subtitle>
-						</v-list-item>
+					<v-col cols="12" sm="6" md="3">
+						<v-card variant="outlined" class="h-100">
+							<v-card-text class="text-center">
+								<v-icon icon="mdi-arrow-expand-up" size="large" color="primary" class="mb-2" />
+								<div class="text-h6">{{ rocket.height?.meters || 'N/A' }} m</div>
+								<div class="text-caption text-grey">Height</div>
+							</v-card-text>
+						</v-card>
 					</v-col>
-					<v-col cols="12" sm="6">
-						<v-list-item>
-							<v-list-item-title>Diameter</v-list-item-title>
-							<v-list-item-subtitle>
-								{{ rocket.diameter?.meters || 'N/A' }} m
-							</v-list-item-subtitle>
-						</v-list-item>
+					<v-col cols="12" sm="6" md="3">
+						<v-card variant="outlined" class="h-100">
+							<v-card-text class="text-center">
+								<v-icon icon="mdi-diameter" size="large" color="primary" class="mb-2" />
+								<div class="text-h6">{{ rocket.diameter?.meters || 'N/A' }} m</div>
+								<div class="text-caption text-grey">Diameter</div>
+							</v-card-text>
+						</v-card>
 					</v-col>
-				</v-row>
-				<v-row>
-					<v-col cols="12" sm="6">
-						<v-list-item>
-							<v-list-item-title>Mass</v-list-item-title>
-							<v-list-item-subtitle>
-                {{ rocket.mass?.kg || 'N/A' }} kg
-              </v-list-item-subtitle>
-						</v-list-item>
+					<v-col cols="12" sm="6" md="3">
+						<v-card variant="outlined" class="h-100">
+							<v-card-text class="text-center">
+								<v-icon icon="mdi-weight" size="large" color="primary" class="mb-2" />
+								<div class="text-h6">{{ rocket.mass?.kg || 'N/A' }} kg</div>
+								<div class="text-caption text-grey">Mass</div>
+							</v-card-text>
+						</v-card>
 					</v-col>
-					<v-col cols="12" sm="6">
-						<v-list-item>
-							<v-list-item-title>Stages</v-list-item-title>
-							<v-list-item-subtitle>{{ rocket.stages }}</v-list-item-subtitle>
-						</v-list-item>
+					<v-col cols="12" sm="6" md="3">
+						<v-card variant="outlined" class="h-100">
+							<v-card-text class="text-center">
+								<v-icon icon="mdi-layers" size="large" color="primary" class="mb-2" />
+								<div class="text-h6">{{ rocket.stages }}</div>
+								<div class="text-caption text-grey">Stages</div>
+							</v-card-text>
+						</v-card>
 					</v-col>
 				</v-row>
 			</v-card-text>
-			<v-card-actions class="justify-space-between">
-				<v-btn color="secondary" @click="goBack">
+			<v-divider class="mx-4" />
+			<v-card-actions class="justify-space-between px-6 py-4">
+				<v-btn color="secondary" @click="goBack" variant="outlined">
 					<v-icon icon="mdi-arrow-left" class="mr-1" />
 					Back
 				</v-btn>
@@ -68,9 +74,9 @@
 				</v-btn>
 			</v-card-actions>
 		</v-card>
-		<v-alert v-else type="info" class="mx-auto" max-width="600">
-			<v-progress-circular indeterminate color="primary" />
-			  Loading rocket details...
+		<v-alert v-else type="info" class="mx-auto" max-width="800">
+			<v-progress-circular indeterminate class="mr-3" />
+			Loading rocket details...
 		</v-alert>
 	</v-container>
 </template>
@@ -139,9 +145,31 @@ function formatDate(dateStr: string): string {
 
 <style scoped>
 .v-card {
-	border-radius: 18px;
+	border-radius: 16px;
+	overflow: hidden;
 }
-.v-list-item-title {
+
+.v-card-title {
+	font-size: 2rem;
 	font-weight: 600;
+}
+
+.v-card-subtitle {
+	font-size: 1.1rem;
+}
+
+.v-card-text {
+	font-size: 1.1rem;
+	line-height: 1.6;
+}
+
+.v-btn {
+	font-weight: 500;
+	letter-spacing: 0.5px;
+	transition: transform 0.2s;
+}
+
+.v-btn:hover {
+	transform: translateY(-1px);
 }
 </style>
