@@ -8,12 +8,28 @@
       <v-btn to="/" variant="text" class="text-white" exact>Home</v-btn>
       <v-btn to="/launches" variant="text" class="text-white">Launches</v-btn>
       <v-btn to="/rockets" variant="text" class="text-white">Rockets</v-btn>
+      <v-btn
+        to="/favorites"
+        color="white"
+        variant="text"
+        class="mr-2">
+        <v-icon icon="mdi-heart" class="mr-1" />
+        Favorites
+        <v-badge
+          :content="favoriteCount"
+          :model-value="favoriteCount > 0"
+          color="error"
+          class="ml-2"/>
+      </v-btn>
     </v-container>
   </v-app-bar>
 </template>
 
-<script setup>
-// No additional logic needed
+<script lang="ts" setup>
+import { useFavoritesStore } from '~/stores/useFavorites'
+
+const favoritesStore = useFavoritesStore()
+const favoriteCount = computed(() => favoritesStore.favoriteCount)
 </script>
 
 <style scoped>
