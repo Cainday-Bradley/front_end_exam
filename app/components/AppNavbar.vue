@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="primary" elevation="2" class="px-0">
+  <v-app-bar color="primary" elevation="2" class="px-0" :style="{ zIndex: 1004 }">
     <v-container class="d-flex align-center">
       <NuxtLink to="/" class="text-decoration-none">
         <v-app-bar-title class="text-white d-flex align-center">
