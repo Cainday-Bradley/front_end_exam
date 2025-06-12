@@ -1,11 +1,16 @@
 <template>
+	<!-- Main container for launches page -->
 	<v-container>
+		<!-- Header section with filters -->
 		<div class="d-flex align-center justify-space-between mb-6">
+			<!-- Page title with icon -->
 			<h2 class="d-flex align-center mb-0">
 				<v-icon icon="mdi-rocket-launch" color="primary" class="mr-2" />
 				SpaceX Launches
 			</h2>
+			<!-- Filter controls -->
 			<div class="d-flex align-center gap-4">
+				<!-- Year filter dropdown -->
 				<v-select
 					v-model="selectedYear"
 					:items="availableYears"
@@ -14,19 +19,21 @@
 					clear-icon="mdi-close-circle"
 					item-title="year"
 					item-value="year"
-					style="min-width: 200px"
-				/>
+					style="min-width: 200px"/>
+				<!-- Sort order dropdown -->
 				<v-select
 					v-model="sortOrder"
 					:items="sortOptions"
 					label="Sort by Launch Date"
 					item-title="label"
 					item-value="value"
-					style="min-width: 200px"
-				/>
+					style="min-width: 200px"/>
 			</div>
 		</div>
+
+		<!-- Launches table -->
 		<v-table v-if="sortedLaunches.length" class="launches-table">
+			<!-- Table header -->
 			<thead>
 				<tr>
 					<th class="mission-name">Mission Name</th>
@@ -36,17 +43,18 @@
 					<th class="details">Details</th>
 				</tr>
 			</thead>
+			<!-- Table body -->
 			<tbody>
 				<tr v-for="launch in sortedLaunches" :key="launch.id">
 					<td class="mission-name">{{ launch.mission_name }}</td>
 					<td class="launch-date">{{ formatDate(launch.launch_date_utc) }}</td>
 					<td class="launch-site">{{ launch.launch_site?.site_name_long || 'N/A' }}</td>
+					<!-- Rocket name with link to details if available -->
 					<td class="rocket-name">
 						<NuxtLink
 							v-if="launch.rocket && launch.rocket.rocket_name && launch.rocket.rocket.id"
 							:to="`/rockets/${launch.rocket.rocket.id}`"
-							class="rocket-link"
-						>
+							class="rocket-link">
 							<v-icon icon="mdi-rocket" size="small" class="mr-1" />
 							{{ launch.rocket.rocket_name }}
 						</NuxtLink>
@@ -56,14 +64,17 @@
 				</tr>
 			</tbody>
 		</v-table>
+		<!-- Empty state message -->
 		<v-alert v-else type="info" class="mt-6">No launches found.</v-alert>
 	</v-container>
 </template>
 
 <script lang="ts" setup>
+// Import composables for filtering and sorting
 import { useLaunchYearFilter } from '~/composables/useLaunchYearFilter'
 import { useLaunchSort } from '~/composables/useLaunchSort'
 
+// GraphQL query for fetching past launches
 const LAUNCHES_QUERY = gql`
 	query GetLaunches {
 		launchesPast(limit: 50, sort: "launch_date_utc", order: "desc") {
@@ -84,23 +95,23 @@ const LAUNCHES_QUERY = gql`
 	}
 `
 
+// Fetch launches data
 const { data, pending, error } = useAsyncQuery<{ launchesPast: any[] }>(LAUNCHES_QUERY)
 const launches = computed(() => data.value?.launchesPast ?? [])
 
-const {
-	selectedYear,
-	setYear,
-	filteredLaunches,
-	availableYears
-} = useLaunchYearFilter(launches)
+// Initialize year filter
+const { selectedYear, setYear, filteredLaunches, availableYears } = useLaunchYearFilter(launches)
 
+// Sort options configuration
 const sortOptions = [
 	{ label: 'Newest First', value: 'desc' },
-	{ label: 'Oldest First', value: 'asc' }
+	{ label: 'Oldest First', value: 'asc' },
 ]
 
+// Initialize sort functionality
 const { sortOrder, setSortOrder, sortedLaunches } = useLaunchSort(filteredLaunches)
 
+// Format date to readable string with time
 function formatDate(dateStr: string): string {
 	const date = new Date(dateStr)
 	return date.toLocaleString(undefined, {
@@ -108,26 +119,30 @@ function formatDate(dateStr: string): string {
 		month: 'short',
 		day: 'numeric',
 		hour: '2-digit',
-		minute: '2-digit'
+		minute: '2-digit',
 	})
 }
 </script>
 
 <style scoped>
+/* Container width constraint */
 .v-container {
 	max-width: 1400px;
 }
 
+/* Gap utility class */
 .gap-4 {
 	gap: 16px;
 }
 
+/* Table styling */
 .v-table {
 	border-radius: 8px;
 	overflow: hidden;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Table header styling */
 .v-table th {
 	font-weight: 600;
 	background-color: #246fc3;
@@ -137,12 +152,13 @@ function formatDate(dateStr: string): string {
 	padding: 16px;
 }
 
+/* Table cell styling */
 .v-table td {
 	padding: 16px;
 	vertical-align: top;
 }
 
-/* Column width classes */
+/* Column width definitions */
 .mission-name {
 	width: 15%;
 	min-width: 150px;
@@ -169,6 +185,7 @@ function formatDate(dateStr: string): string {
 	min-width: 300px;
 }
 
+/* Rocket link styling */
 .rocket-link {
 	display: inline-flex;
 	align-items: center;
@@ -178,6 +195,7 @@ function formatDate(dateStr: string): string {
 	transition: color 0.2s;
 }
 
+/* Rocket link hover effect */
 .rocket-link:hover {
 	color: rgb(var(--v-theme-primary-darken-1));
 	text-decoration: underline;
