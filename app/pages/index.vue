@@ -1,121 +1,186 @@
 <template>
-	<v-container>
-		<h2>
-			<v-icon icon="mdi-vuetify" />
-			Starter Template
-		</h2>
-		<h5>Nuxt 3 / Vuetify / Graphql / Pinia</h5>
-		<h3 class="my-5">
-			Example Pinia
-			<v-chip color="blue">useCounter</v-chip>
-		</h3>
-		<v-card class="mx-auto my-12" max-width="374">
-			<v-card-title class="text-blue">Pinia useCounter()</v-card-title>
-			<v-card-item>
-				<v-card-text>
-					<v-chip>count:</v-chip>
-					{{ store.count }}
-				</v-card-text>
-				<v-card-text>
-					<v-chip>doubleCount:</v-chip>
-					{{ store.doubleCount }}
-				</v-card-text>
-			</v-card-item>
+	<v-container class="py-10">
+		<v-row class="mb-10">
+			<v-col cols="12" class="text-center">
+				<h1 class="text-h3 font-weight-bold mb-4 d-flex align-center justify-center">
+					<v-icon icon="mdi-rocket" color="primary" size="x-large" class="mr-3" />
+					Welcome to SpaceX Explorer
+				</h1>
+				<p class="text-h6 text-grey-darken-1 mb-8">
+					Explore SpaceX rockets, launches, and more in one place
+				</p>
+			</v-col>
+		</v-row>
 
-			<v-card-actions><v-btn color="blue" @click="store.increment()">Increment</v-btn></v-card-actions>
-		</v-card>
+		<v-row>
+			<v-col cols="12" md="4">
+				<v-card class="h-100" elevation="4">
+					<v-card-title class="d-flex align-center">
+						<v-icon icon="mdi-rocket" color="primary" size="large" class="mr-2" />
+						Rockets
+					</v-card-title>
+					<v-card-text>
+						<p class="text-body-1 mb-4">
+							Discover detailed information about SpaceX's rocket fleet, including specifications, launch history, and more.
+						</p>
+						<v-list density="compact" class="bg-transparent">
+							<v-list-item>
+								<template v-slot:prepend>
+									<v-icon icon="mdi-check-circle" color="success" />
+								</template>
+								<v-list-item-title>Detailed Specifications</v-list-item-title>
+							</v-list-item>
+							<v-list-item>
+								<template v-slot:prepend>
+									<v-icon icon="mdi-check-circle" color="success" />
+								</template>
+								<v-list-item-title>Launch History</v-list-item-title>
+							</v-list-item>
+							<v-list-item>
+								<template v-slot:prepend>
+									<v-icon icon="mdi-check-circle" color="success" />
+								</template>
+								<v-list-item-title>Technical Details</v-list-item-title>
+							</v-list-item>
+						</v-list>
+					</v-card-text>
+					<v-divider />
+					<v-card-actions>
+						<v-btn
+							to="/rockets"
+							color="primary"
+							variant="text"
+							class="text-none"
+						>
+							Explore Rockets
+							<v-icon icon="mdi-arrow-right" class="ml-1" />
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
 
-		<h3 class="my-5">
-			Example Vuetify
-			<v-chip color="blue">Card</v-chip>
-		</h3>
-		<v-card class="mx-auto my-12" max-width="374">
-			<template #progress>
-				<v-progress-linear color="deep-purple" height="10" indeterminate />
-			</template>
+			<v-col cols="12" md="4">
+				<v-card class="h-100" elevation="4">
+					<v-card-title class="d-flex align-center">
+						<v-icon icon="mdi-rocket-launch" color="primary" size="large" class="mr-2" />
+						Launches
+					</v-card-title>
+					<v-card-text>
+						<p class="text-body-1 mb-4">
+							Stay updated with SpaceX's latest launches, including mission details, launch dates, and outcomes.
+						</p>
+						<v-list density="compact" class="bg-transparent">
+							<v-list-item>
+								<template v-slot:prepend>
+									<v-icon icon="mdi-check-circle" color="success" />
+								</template>
+								<v-list-item-title>Mission Information</v-list-item-title>
+							</v-list-item>
+							<v-list-item>
+								<template v-slot:prepend>
+									<v-icon icon="mdi-check-circle" color="success" />
+								</template>
+								<v-list-item-title>Launch Schedule</v-list-item-title>
+							</v-list-item>
+							<v-list-item>
+								<template v-slot:prepend>
+									<v-icon icon="mdi-check-circle" color="success" />
+								</template>
+								<v-list-item-title>Mission Outcomes</v-list-item-title>
+							</v-list-item>
+						</v-list>
+					</v-card-text>
+					<v-divider />
+					<v-card-actions>
+						<v-btn
+							to="/launches"
+							color="primary"
+							variant="text"
+							class="text-none"
+						>
+							View Launches
+							<v-icon icon="mdi-arrow-right" class="ml-1" />
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
 
-			<v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png" />
-
-			<v-card-title>Cafe Badilico</v-card-title>
-
-			<v-card-text>
-				<v-row align="center" class="mx-0">
-					<ClientOnly>
-						<v-rating :value="4.5" color="amber" dense half-increments readonly size="14" />
-						<div class="grey--text ms-4">4.5 (413)</div>
-					</ClientOnly>
-				</v-row>
-
-				<div class="my-4 text-subtitle-1">$ • Italian, Cafe</div>
-
-				<div>
-					Small plates, salads & sandwiches - an intimate setting with 12 indoor seats plus patio
-					seating.
-				</div>
-			</v-card-text>
-
-			<v-divider class="mx-4" />
-
-			<v-card-title>Tonight's availability</v-card-title>
-
-			<v-card-text>
-				<v-chip-group v-model="selection" active-class="deep-purple accent-4 white--text" column>
-					<v-chip>5:30PM</v-chip>
-
-					<v-chip>7:30PM</v-chip>
-
-					<v-chip>8:00PM</v-chip>
-
-					<v-chip>9:00PM</v-chip>
-				</v-chip-group>
-			</v-card-text>
-
-			<v-card-actions>
-				<v-btn color="deep-purple lighten-2">Reserve</v-btn>
-			</v-card-actions>
-		</v-card>
-		<h3 class="my-5">
-			Example Vuetify
-			<v-chip color="blue">SimpleTable</v-chip>
-			<v-chip color="orange">Data from spaceX graphql</v-chip>
-		</h3>
-		<p>There are {{ ships?.length || 0 }} ships.</p>
-		<v-table>
-			<thead>
-				<tr>
-					<th class="text-left">Name</th>
-					<th class="text-left">Active</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="ship in ships" :key="ship.name">
-					<td>{{ ship.name }}</td>
-					<td>
-						<v-chip :color="ship.active ? 'green' : 'red'">{{ ship.active }}</v-chip>
-					</td>
-				</tr>
-			</tbody>
-		</v-table>
+			<v-col cols="12" md="4">
+				<v-card class="h-100" elevation="4">
+					<v-card-title class="d-flex align-center">
+						<v-icon icon="mdi-heart" color="primary" size="large" class="mr-2" />
+						Favorites
+					</v-card-title>
+					<v-card-text>
+						<p class="text-body-1 mb-4">
+							Keep track of your favorite rockets and easily access their information whenever you need it.
+						</p>
+						<v-list density="compact" class="bg-transparent">
+							<v-list-item>
+								<template v-slot:prepend>
+									<v-icon icon="mdi-check-circle" color="success" />
+								</template>
+								<v-list-item-title>Save Favorites</v-list-item-title>
+							</v-list-item>
+							<v-list-item>
+								<template v-slot:prepend>
+									<v-icon icon="mdi-check-circle" color="success" />
+								</template>
+								<v-list-item-title>Quick Access</v-list-item-title>
+							</v-list-item>
+							<v-list-item>
+								<template v-slot:prepend>
+									<v-icon icon="mdi-check-circle" color="success" />
+								</template>
+								<v-list-item-title>Manage Collection</v-list-item-title>
+							</v-list-item>
+						</v-list>
+					</v-card-text>
+					<v-divider />
+					<v-card-actions>
+						<v-btn
+							to="/favorites"
+							color="primary"
+							variant="text"
+							class="text-none"
+						>
+							View Favorites
+							<v-icon icon="mdi-arrow-right" class="ml-1" />
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+		</v-row>
 	</v-container>
 </template>
+
 <script lang="ts" setup>
-const store = useCounter()
-const selection = ref(0)
-const query = gql`
-	query getShips {
-		ships {
-			id
-			name
-			active
-		}
-	}
-`
-const { data } = useAsyncQuery<{
-	ships: {
-		id: string
-		name: string
-		active: boolean
-	}[]
-}>(query)
-const ships = computed(() => data.value?.ships ?? [])
+// No additional logic needed
 </script>
+
+<style scoped>
+.v-card {
+	border-radius: 16px;
+	overflow: hidden;
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.v-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.v-btn {
+	font-weight: 500;
+	letter-spacing: 0.5px;
+	transition: transform 0.2s;
+}
+
+.v-btn:hover {
+	transform: translateY(-1px);
+}
+
+.v-list-item {
+	min-height: 40px;
+}
+</style>
