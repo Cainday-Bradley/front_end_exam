@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 
+// for dark mode feature
 export const useThemeStore = defineStore('theme', {
   state: () => ({
     isDark: false
