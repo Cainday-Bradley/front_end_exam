@@ -140,14 +140,14 @@ function formatDate(dateStr: string): string {
 	border-radius: 12px;
 	overflow: hidden;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	background-color: white;
+	background-color: rgb(var(--v-theme-surface));
 }
 
 /* Table header styling */
 .v-table th {
 	font-weight: 600;
 	background-color: rgb(var(--v-theme-primary));
-	color: white;
+	color: rgb(var(--v-theme-on-primary));
 	border-bottom: 2px solid rgb(var(--v-theme-primary-darken-1));
 	white-space: nowrap;
 	padding: 20px 16px;
@@ -159,13 +159,14 @@ function formatDate(dateStr: string): string {
 .v-table td {
 	padding: 16px;
 	vertical-align: top;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.08);
 	transition: background-color 0.2s ease;
+	color: rgb(var(--v-theme-on-surface));
 }
 
 /* Row hover effect */
 .v-table tbody tr:hover td {
-	background-color: rgba(var(--v-theme-primary), 0.04);
+	background-color: rgba(var(--v-theme-primary), 0.08);
 	cursor: pointer;
 }
 
@@ -174,19 +175,20 @@ function formatDate(dateStr: string): string {
 	width: 15%;
 	min-width: 150px;
 	font-weight: 500;
+	color: rgb(var(--v-theme-on-surface));
 }
 
 .launch-date {
 	width: 15%;
 	min-width: 150px;
 	white-space: nowrap;
-	color: rgba(0, 0, 0, 0.7);
+	color: rgba(var(--v-theme-on-surface), 0.7);
 }
 
 .launch-site {
 	width: 10%;
 	min-width: 100px;
-	color: rgba(0, 0, 0, 0.7);
+	color: rgba(var(--v-theme-on-surface), 0.7);
 }
 
 .rocket-name {
@@ -197,7 +199,7 @@ function formatDate(dateStr: string): string {
 .details {
 	width: 35%;
 	min-width: 300px;
-	color: rgba(0, 0, 0, 0.7);
+	color: rgba(var(--v-theme-on-surface), 0.7);
 	line-height: 1.5;
 }
 
@@ -216,7 +218,7 @@ function formatDate(dateStr: string): string {
 /* Rocket link hover effect */
 .rocket-link:hover {
 	color: rgb(var(--v-theme-primary-darken-1));
-	background-color: rgba(var(--v-theme-primary), 0.08);
+	background-color: rgba(var(--v-theme-primary), 0.12);
 	text-decoration: none;
 }
 
@@ -224,5 +226,25 @@ function formatDate(dateStr: string): string {
 .v-alert {
 	border-radius: 8px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+	background-color: rgb(var(--v-theme-surface));
+}
+
+/* Dark mode specific adjustments */
+:deep(.v-theme--dark) {
+	.v-table {
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	}
+
+	.v-table td {
+		border-bottom-color: rgba(var(--v-theme-on-surface), 0.12);
+	}
+
+	.v-table tbody tr:hover td {
+		background-color: rgba(var(--v-theme-primary), 0.12);
+	}
+
+	.v-alert {
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
 }
 </style>
