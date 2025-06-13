@@ -137,42 +137,56 @@ function formatDate(dateStr: string): string {
 
 /* Table styling */
 .v-table {
-	border-radius: 8px;
+	border-radius: 12px;
 	overflow: hidden;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	background-color: white;
 }
 
 /* Table header styling */
 .v-table th {
 	font-weight: 600;
-	background-color: #246fc3;
+	background-color: rgb(var(--v-theme-primary));
 	color: white;
-	border-bottom: 2px solid rgb(var(--v-theme-primary));
+	border-bottom: 2px solid rgb(var(--v-theme-primary-darken-1));
 	white-space: nowrap;
-	padding: 16px;
+	padding: 20px 16px;
+	font-size: 0.95rem;
+	letter-spacing: 0.5px;
 }
 
 /* Table cell styling */
 .v-table td {
 	padding: 16px;
 	vertical-align: top;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	transition: background-color 0.2s ease;
+}
+
+/* Row hover effect */
+.v-table tbody tr:hover td {
+	background-color: rgba(var(--v-theme-primary), 0.04);
+	cursor: pointer;
 }
 
 /* Column width definitions */
 .mission-name {
 	width: 15%;
 	min-width: 150px;
+	font-weight: 500;
 }
 
 .launch-date {
 	width: 15%;
 	min-width: 150px;
 	white-space: nowrap;
+	color: rgba(0, 0, 0, 0.7);
 }
 
 .launch-site {
 	width: 10%;
 	min-width: 100px;
+	color: rgba(0, 0, 0, 0.7);
 }
 
 .rocket-name {
@@ -183,6 +197,8 @@ function formatDate(dateStr: string): string {
 .details {
 	width: 35%;
 	min-width: 300px;
+	color: rgba(0, 0, 0, 0.7);
+	line-height: 1.5;
 }
 
 /* Rocket link styling */
@@ -192,12 +208,21 @@ function formatDate(dateStr: string): string {
 	color: rgb(var(--v-theme-primary));
 	text-decoration: none;
 	font-weight: 500;
-	transition: color 0.2s;
+	transition: all 0.2s ease;
+	padding: 4px 8px;
+	border-radius: 4px;
 }
 
 /* Rocket link hover effect */
 .rocket-link:hover {
 	color: rgb(var(--v-theme-primary-darken-1));
-	text-decoration: underline;
+	background-color: rgba(var(--v-theme-primary), 0.08);
+	text-decoration: none;
+}
+
+/* Empty state styling */
+.v-alert {
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 </style>
