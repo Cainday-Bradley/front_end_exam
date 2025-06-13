@@ -1,7 +1,7 @@
 <template>
 	<v-app :theme="themeStore.isDark ? 'dark' : 'light'">
 		<AppNavbar />
-		<v-main>
+		<v-main class="main-content">
 			<slot />
 		</v-main>
 		<AppFooter />
@@ -25,9 +25,10 @@ onMounted(() => {
 	font-family: 'Roboto', sans-serif;
 }
 
-.v-main {
+/* Main content area styling */
+.main-content {
 	min-height: calc(100vh - 128px); /* Account for navbar and footer */
-	padding: 20px 0;
+	padding-top: 64px !important; /* Height of the app bar */
 }
 
 /* Smooth transitions for all interactive elements */
@@ -66,5 +67,17 @@ a {
 
 a:hover {
 	text-decoration: underline;
+}
+
+/* Ensure app bar stays on top */
+.v-app-bar {
+	position: fixed !important;
+	z-index: 1000 !important;
+}
+
+/* Ensure main content doesn't overlap with app bar */
+.v-main {
+	position: relative;
+	z-index: 1;
 }
 </style>
